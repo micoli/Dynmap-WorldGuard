@@ -33,9 +33,9 @@ import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class DynmapWorldGuardPlugin extends JavaPlugin {
-    private static final Logger log = Logger.getLogger("Minecraft");
-    private static final String LOG_PREFIX = "[Dynmap-WorldGuard] ";
-    private static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br /> Owner <span style=\"font-weight:bold;\">%playerowners%</span><br />Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
+    protected static final Logger log = Logger.getLogger("Minecraft");
+    protected static final String LOG_PREFIX = "[Dynmap-WorldGuard] ";
+    protected static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br /> Owner <span style=\"font-weight:bold;\">%playerowners%</span><br />Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
     Plugin dynmap;
     DynmapAPI api;
     MarkerAPI markerapi;
@@ -55,7 +55,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
     boolean stop; 
     int maxdepth;
     
-    private static class AreaStyle {
+    protected static class AreaStyle {
         String strokecolor;
         double strokeopacity;
         int strokeweight;
@@ -88,16 +88,16 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
         log.log(Level.SEVERE, LOG_PREFIX + msg);
     }
 
-    private class WorldGuardUpdate implements Runnable {
+    protected class WorldGuardUpdate implements Runnable {
         public void run() {
             if(!stop)
                 updateRegions();
         }
     }
     
-    private Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
+    protected Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
 
-    private String formatInfoWindow(ProtectedRegion region, AreaMarker m) {
+    protected String formatInfoWindow(ProtectedRegion region, AreaMarker m) {
         String v = "<div class=\"regioninfo\">"+infowindow+"</div>";
         v = v.replace("%regionname%", m.getLabel());
         v = v.replace("%playerowners%", region.getOwners().toPlayersString());
@@ -118,7 +118,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
         return v;
     }
     
-    private boolean isVisible(String id, String worldname) {
+    protected boolean isVisible(String id, String worldname) {
         if((visible != null) && (visible.size() > 0)) {
             if((visible.contains(id) == false) && (visible.contains("world:" + worldname) == false) &&
                     (visible.contains(worldname + "/" + id) == false)) {
@@ -132,7 +132,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
         return true;
     }
     
-    private void addStyle(String resid, String worldid, AreaMarker m, ProtectedRegion region) {
+    protected void addStyle(String resid, String worldid, AreaMarker m, ProtectedRegion region) {
         AreaStyle as = cusstyle.get(worldid + "/" + resid);
         if(as == null) {
             as = cusstyle.get(resid);
@@ -184,7 +184,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
     }
     
     /* Handle specific region */
-    private void handleRegion(World world, ProtectedRegion region, Map<String, AreaMarker> newmap) {
+    protected void handleRegion(World world, ProtectedRegion region, Map<String, AreaMarker> newmap) {
         String name = region.getId();
         double[] x = null;
         double[] z = null;
@@ -246,7 +246,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
     }
     
     /* Update worldguard region information */
-    private void updateRegions() {
+    protected void updateRegions() {
         Map<String,AreaMarker> newmap = new HashMap<String,AreaMarker>(); /* Build new map */
  
         /* Loop through worlds */
@@ -278,7 +278,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
         
     }
 
-    private class OurServerListener implements Listener {
+    protected class OurServerListener implements Listener {
         @SuppressWarnings("unused")
         @EventHandler(priority=EventPriority.MONITOR)
         public void onPluginEnable(PluginEnableEvent event) {
@@ -315,7 +315,7 @@ public class DynmapWorldGuardPlugin extends JavaPlugin {
             activate();
     }
 
-    private void activate() {
+    protected void activate() {
         /* Now, get markers API */
         markerapi = api.getMarkerAPI();
         if(markerapi == null) {
